@@ -19,6 +19,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 
 public class Scheduler {
     private static final String URL = "https://banweb.banner.vt.edu/ssb/prod/HZSKVTSC.P_ProcRequest";
+    private static Scheduler instance;
+    
+    public static Scheduler getInstance() throws FailingHttpStatusCodeException, IOException{
+    	if(instance == null){
+    		instance = new Scheduler();
+    	}
+    	return instance;
+    }
 
     public Scheduler() throws FailingHttpStatusCodeException, IOException {
         System.out.println("Running");
