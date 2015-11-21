@@ -8,7 +8,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
  * This is necessary because sometimes cells do not exist in the table
  * @author Mark Wiggans
  */
-public class RowParser {
+class RowParser {
     private boolean addTim = false, online = false;
     private int crn;
     private String course, title, type, credits, seats, capacity, instructor, days, begin, end, location, exam;
@@ -106,7 +106,7 @@ public class RowParser {
      * @return the type of the class
      */
     public ClassType type(){
-        return ClassType.valueOf(type);
+        return ClassType.stringToType(type);
     }
 
     /**
@@ -119,6 +119,10 @@ public class RowParser {
     }
 
 
+    /**
+     * Gets the number of available seats in the class
+     * @return the number of seats
+     */
     public String seats(){
         return seats;
     }

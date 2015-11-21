@@ -14,7 +14,7 @@ public enum ClassType {
      * @param s the type string
      * @return a ClassType object that correlates with the given string
      */
-    public ClassType stringToType(String s){
+    public static ClassType stringToType(String s){
         if(s.equals("ONLINE COURSE")){
             return ONLINE;
         }

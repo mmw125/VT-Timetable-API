@@ -3,9 +3,9 @@ package vtscheduler;
 import java.util.ArrayList;
 
 /**
- * This has a day and a start and end time.  
+ * This has a day and a start and end time.
  */
-public class MeetingTime {
+class MeetingTime {
     private Time start, end;
     private Day day;
     private String location;
@@ -48,6 +48,7 @@ public class MeetingTime {
         return day;
     }
 
+    @Override
     public String toString(){
         if(day == Day.ONLINE){
             return Day.ONLINE.toString();
@@ -55,6 +56,14 @@ public class MeetingTime {
         return day.toString() + "(" + start.toString() + "-" + end.toString()+")";
     }
 
+    /**
+     * 
+     * @param days
+     * @param start
+     * @param end
+     * @param location
+     * @return
+     */
     public static ArrayList<MeetingTime> parseStrings(String days, String start, String end, String location){
         ArrayList<MeetingTime> output = new ArrayList<MeetingTime>();
 

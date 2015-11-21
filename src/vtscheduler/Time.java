@@ -4,10 +4,14 @@ package vtscheduler;
  * This represents a time
  * It takes in 12 hour AM-PM and converts it to military time to make it easier to compute
  */
-public class Time {
+class Time {
     private int hours = 0, minutes = 0;
     private String startString;
 
+    /**
+     * Creates a new time with the given 
+     * @param time
+     */
     public Time(String time){
         if(time == null){
             time = "00:00AM";
@@ -28,10 +32,18 @@ public class Time {
         return startString;
     }
 
+    /**
+     * Gets the num of hours in the 24 hour format
+     * @return hours in 24 hour formay
+     */
     public int getHours(){
         return hours;
     }
 
+    /**
+     * Gets the number of minutes in the time
+     * @return the minutes
+     */
     public int getMinutes(){
         return minutes;
     }

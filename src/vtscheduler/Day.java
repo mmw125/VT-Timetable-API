@@ -3,7 +3,7 @@ package vtscheduler;
 /**
  * Created by Mark on 3/3/2015.
  */
-public enum Day {
+enum Day {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, ONLINE;
 
     /**

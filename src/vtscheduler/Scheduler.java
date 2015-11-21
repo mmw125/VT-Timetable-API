@@ -1,8 +1,5 @@
 package vtscheduler;
 
-/**
- * @author Mark Wiggans
- */
 import java.io.IOException;
 import java.util.List;
 
@@ -17,10 +14,21 @@ import com.gargoylesoftware.htmlunit.html.HtmlTable;
 import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 
+/**
+ * Allows you to get data from the timetable of classes
+ * @author Mark Wiggans
+ */
 public class Scheduler {
     private static final String URL = "https://banweb.banner.vt.edu/ssb/prod/HZSKVTSC.P_ProcRequest";
     private static Scheduler instance;
+    private boolean doneParsing;
     
+    /**
+     * Gets an instance of the schediler
+     * @return the instance of scheduler
+     * @throws FailingHttpStatusCodeException
+     * @throws IOException
+     */
     public static Scheduler getInstance() throws FailingHttpStatusCodeException, IOException{
     	if(instance == null){
     		instance = new Scheduler();
@@ -28,44 +36,70 @@ public class Scheduler {
     	return instance;
     }
 
-    public Scheduler() throws FailingHttpStatusCodeException, IOException {
-        System.out.println("Running");
-        WebClient webClient = new WebClient();
-        HtmlPage page = webClient.getPage(URL);
-        HtmlForm form = page.getFormByName("ttform");
-        HtmlSubmitInput button = form.getInputByName("BTN_PRESSED");
-        HtmlSelect term = form.getSelectByName("TERMYEAR");
-        term.setSelectedAttribute(term.getOptions().get(1), true);
-        HtmlSelect select = form.getSelectByName("subj_code");
-        System.out.println(select.asText());
-        int count = 0;
-        for (HtmlOption option : select.getOptions()) {
-//			String optionText = option.asText();
-//			String[] split = optionText.split(" ");
-//			// System.out.print(split[0].toUpperCase()+", ");
-//			if (option.getValueAttribute().equals("CS")) {
-//				cs = option;
-//			}
-            if(!option.asText().contains("All Subjects")){
-                System.out.println(option.asText());
-                select.setSelectedAttribute(option, true);
-                parsePage((HtmlPage)button.click());
-            }
-            count++;
-            if(count == 20){
-                break;
-            }
-        }
+    private Scheduler() throws FailingHttpStatusCodeException, IOException {
+    	doneParsing = false;
+        parseTimeTable();
+    }
+    
+    /**
+     * Parses the time table
+     */
+    public void parseTimeTable() {
+    	Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				System.out.println("Started parsing");
+				doneParsing = false;
+		        WebClient webClient = new WebClient();
+		        HtmlPage page = null;
+				try {
+					page = webClient.getPage(URL);
+				} catch (FailingHttpStatusCodeException | IOException e1) {
+					e1.printStackTrace();
+				}
+		        HtmlForm form = page.getFormByName("ttform");
+		        HtmlSubmitInput button = form.getInputByName("BTN_PRESSED");
+		        HtmlSelect term = form.getSelectByName("TERMYEAR");
+		        term.setSelectedAttribute(term.getOptions().get(1), true);
+		        HtmlSelect select = form.getSelectByName("subj_code");
+		        System.out.println(select.asText());
+		        for (HtmlOption option : select.getOptions()) {
+		            if(!option.asText().contains("All Subjects")){
+		                System.out.println(option.asText());
+		                select.setSelectedAttribute(option, true);
+		                try {
+							parsePage((HtmlPage)button.click());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+		            }
+		        }
 
-        for(Department d : Department.getDepartments()){
-            for(Course c : d.getCourses()){
-                System.out.println(c);
-            }
-        }
-        webClient.closeAllWindows();
-
+		        for(Department d : Department.getDepartments()){
+		            for(Course c : d.getCourses()){
+		                System.out.println(c);
+		            }
+		        }
+		        webClient.closeAllWindows();
+		        doneParsing = true;
+			}
+		});
+    	thread.start();
+    }
+    
+    /**
+     * Checks if it is currently parsing the web site
+     * @return true if done parsing
+     * 		false if currently parsing
+     */
+    public boolean doneParsing() {
+    	return doneParsing;
     }
 
+    /**
+     * Creates a new instance of scheduler
+     * @param args no parameters expected
+     */
     public static void main(String[] args) {
         try {
             new Scheduler();
@@ -76,7 +110,7 @@ public class Scheduler {
 
     /**
      * Parses the given page and creates class objects
-     * @param page
+     * @param page the page to parse
      */
     public void parsePage(HtmlPage page){
         if(page.getByXPath("//table[@class='dataentrytable']").isEmpty()){

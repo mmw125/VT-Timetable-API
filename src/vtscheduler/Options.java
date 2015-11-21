@@ -19,25 +19,25 @@ public class Options {
 		this.display = display;
 	}
 	
-//	public void setCampuses(ArrayList<String> camp){
-//		this.campuses = camp;
-//	}
-//	public void setTerms(ArrayList<String> terms){
-//		this.terms = terms;
-//	}
-//	public void setCLEs(ArrayList<String> camp){
-//		this.campuses = camp;
-//	}
-//	
-//	public void setSubject(ArrayList<String> subject){
-//		this.subject = subject;
-//	}
-//	public void setSectionType(ArrayList<String> sectionTypes){
-//		this.sectionType = sectionTypes;
-//	}
-//	public void setDisplay(ArrayList<String> display){
-//		this.display = display;
-//	}
+	public void setCampuses(ArrayList<String> camp){
+		this.campuses = camp;
+	}
+	public void setTerms(ArrayList<String> terms){
+		this.terms = terms;
+	}
+	public void setCLEs(ArrayList<String> camp){
+		this.campuses = camp;
+	}
+	
+	public void setSubject(ArrayList<String> subject){
+		this.subject = subject;
+	}
+	public void setSectionType(ArrayList<String> sectionTypes){
+		this.sectionType = sectionTypes;
+	}
+	public void setDisplay(ArrayList<String> display){
+		this.display = display;
+	}
 	
 	public ArrayList<String> getCampuses(){
 		return campuses;
