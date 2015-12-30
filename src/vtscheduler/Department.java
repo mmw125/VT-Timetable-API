@@ -2,7 +2,8 @@ package vtscheduler;
 
 import java.util.ArrayList;
 
-/**
+
+/** 
  * This represents a department at the university
  * @author Mark Wiggans
  */
@@ -67,8 +68,8 @@ public class Department {
      * instead.
      * @return the name of the department
      */
-    public String getName(){
-        if(name.equals("")){
+    public String getName() {
+        if (name.equals("")) {
             return abbrev;
         }else{
             return name;

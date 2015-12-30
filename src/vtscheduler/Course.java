@@ -33,7 +33,6 @@ public class Course {
      * @param crn the crn to add
      */
     public void addCRN(CRN crn){
-    	//Checks if the CRN already exists
         for(CRN c : crns){
             if(c.equals(crn)){
                 return;

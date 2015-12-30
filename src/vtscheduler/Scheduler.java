@@ -18,7 +18,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
  * Allows you to get data from the timetable of classes
  * @author Mark Wiggans
  */
-public class Scheduler {
+public class Scheduler extends InformationSender{
     private static final String URL = "https://banweb.banner.vt.edu/ssb/prod/HZSKVTSC.P_ProcRequest";
     private static Scheduler instance;
     private boolean doneParsing;
@@ -36,6 +36,12 @@ public class Scheduler {
     	return instance;
     }
 
+    /**
+     * Creates a new instance of a Sceduler
+     * This should only be run once!
+     * @throws FailingHttpStatusCodeException
+     * @throws IOException
+     */
     private Scheduler() throws FailingHttpStatusCodeException, IOException {
     	doneParsing = false;
         parseTimeTable();

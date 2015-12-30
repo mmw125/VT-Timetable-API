@@ -39,25 +39,25 @@ class RowParser {
                 switch(i){
                     case 0:
                         try{
-                            crn=Integer.parseInt(cell.asText().trim());
+                            crn = Integer.parseInt(cell.asText().trim());
                         }catch(NumberFormatException e){
                             System.err.println("NumberFormatException");
                         }
-                    case 1:course=cell.asText(); break;
-                    case 2:title=cell.asText(); break;
+                    case 1:course = cell.asText(); break;
+                    case 2:title = cell.asText(); break;
                     case 3:
                         if(cell.asText().equals("ONLINE COURSE")){
                             online = true;
                         }
-                        type=cell.asText(); break;
-                    case 4:credits=cell.asText(); break;
-                    case 5:seats=cell.asText(); break;
-                    case 6:instructor=cell.asText(); break;
-                    case 7:days=cell.asText(); break;
-                    case 8:begin=cell.asText(); break;
-                    case 9:end=cell.asText(); break;
-                    case 10:location=cell.asText(); break;
-                    case 12:exam=cell.asText(); break;
+                        type = cell.asText(); break;
+                    case 4:credits = cell.asText(); break;
+                    case 5:seats = cell.asText(); break;
+                    case 6:instructor = cell.asText(); break;
+                    case 7:days = cell.asText(); break;
+                    case 8:begin = cell.asText(); break;
+                    case 9:end = cell.asText(); break;
+                    case 10:location = cell.asText(); break;
+                    case 12:exam = cell.asText(); break;
                 }
             }
         }
@@ -97,12 +97,6 @@ class RowParser {
 
     /**
      * Gets the type of class
-     * L = Lecture
-     * B = LAB
-     * I = Independent Study
-     * C = Recitation
-     * R = Research
-     * I might change this to an enum
      * @return the type of the class
      */
     public ClassType type(){

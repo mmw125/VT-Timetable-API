@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * This has a day and a start and end time.
  */
-class MeetingTime {
+public class MeetingTime {
     private Time start, end;
     private Day day;
     private String location;
@@ -57,12 +57,12 @@ class MeetingTime {
     }
 
     /**
-     * 
-     * @param days
-     * @param start
-     * @param end
-     * @param location
-     * @return
+     * Generates the meeting times from the data on the schedule
+     * @param days the days the class meets
+     * @param start what time the class start
+     * @param end when the classes end
+     * @param location where the classes are being held
+     * @return a list of the meeting objects configured with thise meeting times
      */
     public static ArrayList<MeetingTime> parseStrings(String days, String start, String end, String location){
         ArrayList<MeetingTime> output = new ArrayList<MeetingTime>();
