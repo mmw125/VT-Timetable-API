@@ -14,6 +14,12 @@ public interface InformationListener {
 	public void informationRecieved(InformationEvent event);
 	
 	/**
+	 * Lets the application know that options object
+	 * @param event the details from the event
+	 */
+	public void optionsRecieved(Options options);
+	
+	/**
 	 * Lets the caller know that an error has occurred
 	 * @param e the error that happened
 	 */

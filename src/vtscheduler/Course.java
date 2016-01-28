@@ -8,8 +8,7 @@ import java.util.ArrayList;
  * @author Mark Wiggans
  */
 public class Course {
-    private String name, course, number;
-    private Department department;
+    private String department, name, course, number;
     private ArrayList<CRN> crns;
     private ClassType type;
 
@@ -22,8 +21,7 @@ public class Course {
         this.name = name;
         this.course = course;
         String[] splitCourse = course.split("-");
-        department = Department.getDepartment(splitCourse[0]);
-        department.addCourse(this);
+        department = splitCourse[0];
         crns = new ArrayList<CRN>();
         number = splitCourse[1];
     }
@@ -44,7 +42,7 @@ public class Course {
 
     @Override
     public String toString(){
-        StringBuilder builder = new StringBuilder(department.getAbbreviation() + " " + number + " " + name + '\n');
+        StringBuilder builder = new StringBuilder(department + " " + number + " " + name + '\n');
         for(CRN crn : crns){
             builder.append("	"+crn.toString()+'\n');
         }

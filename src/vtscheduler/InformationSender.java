@@ -10,10 +10,16 @@ import java.util.ArrayList;
 public abstract class InformationSender {
 	private ArrayList<InformationListener> listeners;
 	
-	protected void notifyListeners(InformationEvent event) {
+	protected void notifyListeners(Object obj) {
 		if(listeners != null) {
-			for(InformationListener listener : listeners) {
-				listener.informationRecieved(event);
+			if(obj instanceof InformationEvent) {
+				for(InformationListener listener : listeners) {
+					listener.informationRecieved((InformationEvent) obj);
+				}
+			} else if(obj instanceof Options) {
+				for(InformationListener listener : listeners) {
+					listener.informationRecieved((InformationEvent) obj);
+				}
 			}
 		}
 	}

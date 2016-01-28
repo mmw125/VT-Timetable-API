@@ -15,6 +15,13 @@ public class Options {
 			display = null;
 	
 	/**
+	 * Creates a new option object with all of the objects set to zero
+	 */
+	Options() {
+		this(null, null, null, null, null, null);
+	}
+	
+	/**
 	 * Creates a new option object
 	 * @param campuses options for campuses
 	 * @param terms options for terms
@@ -32,17 +39,17 @@ public class Options {
 		this.display = display;
 	}
 	
-//	void setCampuses(ArrayList<String> camp){ this.campuses = camp;	}
-//	
-//	void setTerms(ArrayList<String> terms){ this.terms = terms; }
-//	
-//	void setCLEs(ArrayList<String> camp){ this.campuses = camp; }
-//	
-//	void setSubject(ArrayList<String> subject){ this.subject = subject;	}
-//	
-//	void setSectionType(ArrayList<String> sectionTypes){ this.sectionType = sectionTypes; }
-//	
-//	void setDisplay(ArrayList<String> display){ this.display = display; }
+	void setCampuses(ArrayList<String> camp){ this.campuses = camp;	}
+	
+	void setTerms(ArrayList<String> terms){ this.terms = terms; }
+	
+	void setCLEs(ArrayList<String> camp){ this.campuses = camp; }
+	
+	void setSubjects(ArrayList<String> subject){ this.subject = subject;	}
+	
+	void setSectionTypes(ArrayList<String> sectionTypes){ this.sectionType = sectionTypes; }
+	
+	void setDisplay(ArrayList<String> display){ this.display = display; }
 	
 	public ArrayList<String> getCampuses(){ return campuses; }
 	

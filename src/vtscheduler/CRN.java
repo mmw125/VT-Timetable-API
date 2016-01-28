@@ -44,16 +44,24 @@ public class CRN {
 
     /**
      * Adds the given meeting time to
-     * @param dat
+     * @param dat the additional meeting time
      */
     public void addAdditionalTimes(MeetingTime dat){
         meetingTimes.add(dat);
     }
     
+    /**
+     * Sets which course that this is 
+     * @param course the course
+     */
     public void setCourse(Course course){
     	this.course = course;
     }
     
+    /**
+     * Gets the course that this is
+     * @return the course
+     */
     public Course getCourse(){
     	return course;
     }
