@@ -2,12 +2,17 @@ package vtscheduler;
 
 import java.util.ArrayList;
 
+/**
+ * Holds the information that is returned from
+ * the query
+ * @author Mark Wiggans
+ */
 public class InformationEvent {
 	private ArrayList<Course> courses;
 	private Query query;
 	
 	/**
-	 * 
+	 * Creates a new information event
 	 * @param courses
 	 * @param initialQuery
 	 */

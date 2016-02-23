@@ -47,4 +47,14 @@ class Time {
     public int getMinutes(){
         return minutes;
     }
+    
+    @Override
+    public boolean equals(Object oth) {
+    	if(oth == null) { return false; }
+    	if(oth instanceof Time) {
+    		Time other = (Time) oth;
+    		return other.minutes == minutes && other.hours == hours;
+    	}
+    	return false;
+    }
 }

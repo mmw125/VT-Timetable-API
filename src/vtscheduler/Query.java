@@ -19,10 +19,10 @@ public class Query {
 	}
 	
 	/**
-	 * Runs the query and will call the listeners on the timetable
+	 * Runs the query and will notify the listeners on the timetable when it is done
 	 */
-	public void run() {
-		Timetable.getInstance().runQuery(this);
+	public void run(boolean forceUpdate) {
+		Timetable.getInstance().runQuery(this, forceUpdate);
 	}
 	
 	@Override
@@ -54,5 +54,37 @@ public class Query {
 			return true;
 		}
 		return false;
+	}
+
+	String getCampus() {
+		return campus;
+	}
+	
+	String getTerm() {
+		return term;
+	}
+	
+	String getCLE() {
+		return cle;
+	}
+	
+	String getSubject() {
+		return subject;
+	}
+	
+	String getSectionType() {
+		return sectionType;
+	}
+	
+	String getDisplay() {
+		return campus;
+	}
+	
+	public int getCourseNumber() {
+		return courseNumber;
+	}
+	
+	public int getCRN() {
+		return crn;
 	}
 }

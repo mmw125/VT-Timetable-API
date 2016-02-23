@@ -55,7 +55,6 @@ public class Timetable extends InformationSender {
 	 */
 	public void getOptions(boolean forceUpdate) {
 		Thread thread = new Thread(new Runnable() {
-			
 			@Override
 			public void run() {
 				if(forceUpdate || options == null) {
@@ -122,13 +121,77 @@ public class Timetable extends InformationSender {
 		thread.run();
 	}
 	
-	void runQuery(Query query) {
+	void runQuery(Query query, boolean forceUpdate) {
 		Thread thread = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
-				//TODO: complete runQuery
+				if(!forceUpdate) {
+					for(InformationEvent event : cachedEvents) {
+						if(event.getQuery().equals(query)) {
+							notifyListeners(event);
+							return;
+						}
+					}
+				}
 				
+				WebClient webClient = new WebClient();
+		        HtmlPage page = null;
+				try {
+					page = webClient.getPage(URL);
+				} catch (FailingHttpStatusCodeException | IOException e1) {
+					e1.printStackTrace();
+				}
+		        HtmlForm form = page.getFormByName("ttform");
+		        
+		        
+		        
+		        // Campus
+		        HtmlSelect campuses = form.getSelectByName("CAMPUS");
+		        for (HtmlOption option : campuses.getOptions()) {
+		        	if(option.asText().equals(query.getCampus())) {
+		        		option.setSelected(true);
+		        	}
+		        }
+		        
+		        // Term
+		        ArrayList<String> termList = new ArrayList<String>();
+		        HtmlSelect term = form.getSelectByName("TERMYEAR");
+		        for (HtmlOption option : term.getOptions()) {
+		        	if(!option.asText().equals(query.getTerm())) {
+		        		termList.add(option.asText());
+		        	}
+		        }
+		        
+		        //CLE
+		        ArrayList<String> cleList = new ArrayList<String>();
+		        HtmlSelect cles = form.getSelectByName("CORE_CODE");
+		        for (HtmlOption option : cles.getOptions()) {
+		        	cleList.add(option.asText());
+		        }
+		        
+		        //Subject
+		        ArrayList<String> subjectList = new ArrayList<String>();
+		        HtmlSelect subjects = form.getSelectByName("subj_code");
+		        for (HtmlOption option : subjects.getOptions()) {
+		        	subjectList.add(option.asText());
+		        }
+		        
+		        //Section Type
+		        ArrayList<String> sectTypeList = new ArrayList<String>();
+		        HtmlSelect sectType = form.getSelectByName("SCHDTYPE");
+		        for (HtmlOption option : sectType.getOptions()) {
+		        	sectTypeList.add(option.asText());
+		        }
+		        
+		        //Display
+		        ArrayList<String> displayList = new ArrayList<String>();
+		        HtmlSelect display = form.getSelectByName("open_only");
+		        for (HtmlOption option : display.getOptions()) {
+		        	displayList.add(option.asText());
+		        }
+		        
+		        webClient.closeAllWindows();
 			}
 		});
 		thread.start();

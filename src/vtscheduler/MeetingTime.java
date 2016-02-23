@@ -9,6 +9,14 @@ public class MeetingTime {
     private Time start, end;
     private Day day;
     private String location;
+    
+    /**
+     * Creates a new meeting time
+     * @param start when the class starts
+     * @param end when the class ends
+     * @param day what day of the week the meeting is
+     * @param location what building the class is in
+     */
     public MeetingTime(Time start, Time end, Day day, String location){
         this.start = start;
         this.end = end;
@@ -54,6 +62,16 @@ public class MeetingTime {
             return Day.ONLINE.toString();
         }
         return day.toString() + "(" + start.toString() + "-" + end.toString()+")";
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+    	if(other == null) { return false; }
+    	if(other instanceof MeetingTime) {
+    		MeetingTime oth = (MeetingTime) other;
+    		return oth.day.equals(day) && oth.end.equals(end) && oth.location.equals(location) && oth.start.equals(start);
+    	}
+    	return false;
     }
 
     /**

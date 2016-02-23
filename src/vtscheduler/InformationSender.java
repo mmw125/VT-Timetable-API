@@ -10,6 +10,10 @@ import java.util.ArrayList;
 public abstract class InformationSender {
 	private ArrayList<InformationListener> listeners;
 	
+	/**
+	 * Notifies all of the listeners with the given object
+	 * @param obj the object to give to the listeners
+	 */
 	protected void notifyListeners(Object obj) {
 		if(listeners != null) {
 			if(obj instanceof InformationEvent) {
@@ -20,7 +24,11 @@ public abstract class InformationSender {
 				for(InformationListener listener : listeners) {
 					listener.informationRecieved((InformationEvent) obj);
 				}
+			} else {
+				System.err.println("Cannot notify listeners with object of type " + obj.getClass());
 			}
+		} else {
+			System.err.println("Tried to notify listeners of a null object");
 		}
 	}
 	
@@ -32,6 +40,9 @@ public abstract class InformationSender {
 	public void registerListener(InformationListener listener) {
 		if(listeners == null) {
 			listeners = new ArrayList<InformationListener>();
+		}
+		if(listener == null) {
+			throw new NullPointerException("Tried to register a null listener");
 		}
 		listeners.add(listener);
 	}

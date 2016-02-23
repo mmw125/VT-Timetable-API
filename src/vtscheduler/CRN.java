@@ -11,6 +11,13 @@ public class CRN {
     private String instructor, location;
     private ArrayList<MeetingTime> meetingTimes;
     private Course course;
+    
+    /**
+     * Creates a new CRN
+     * @param crn the crn's number
+     * @param instructor who teaches the class
+     * @param location where the building is located
+     */
     public CRN(int crn, String instructor, String location){
         this.crn = crn;
         this.location = location;
