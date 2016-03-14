@@ -201,7 +201,7 @@ public class Timetable extends InformationSender {
      * Parses the given page and creates class objects
      * @param page the page to parse
      */
-    private ArrayList<Course> parsePage(HtmlPage page){
+    public ArrayList<Course> parsePage(HtmlPage page){
     	ArrayList<Course> courses = new ArrayList<Course>();
         if(page.getByXPath("//table[@class='dataentrytable']").isEmpty()){
             return courses;
