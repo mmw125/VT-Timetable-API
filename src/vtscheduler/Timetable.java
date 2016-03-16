@@ -143,31 +143,31 @@ public class Timetable extends InformationSender {
 					e1.printStackTrace();
 				}
 		        HtmlForm form = page.getFormByName("ttform");
-		        
-		        
-		        
+
 		        // Campus
-		        HtmlSelect campuses = form.getSelectByName("CAMPUS");
-		        for (HtmlOption option : campuses.getOptions()) {
-		        	if(option.asText().equals(query.getCampus())) {
-		        		option.setSelected(true);
-		        	}
+		        if(query.getCampus() != null) {
+		        	HtmlSelect campuses = form.getSelectByName("CAMPUS");
+			        for (HtmlOption option : campuses.getOptions()) {
+			        	if(option.asText().equals(query.getCampus())) {
+			        		option.setSelected(true);
+			        	}
+			        }
 		        }
 		        
-		        // Term
-		        ArrayList<String> termList = new ArrayList<String>();
-		        HtmlSelect term = form.getSelectByName("TERMYEAR");
-		        for (HtmlOption option : term.getOptions()) {
-		        	if(!option.asText().equals(query.getTerm())) {
-		        		termList.add(option.asText());
-		        	}
+		        if(query.getTerm() != null) {
+		        	// Term
+			        HtmlSelect term = form.getSelectByName("TERMYEAR");
+			        for (HtmlOption option : term.getOptions()) {
+			        	if(option.asText().equals(query.getTerm())) {
+			        		option.setSelected(true);
+			        	}
+			        }
 		        }
 		        
-		        //CLE
-		        ArrayList<String> cleList = new ArrayList<String>();
-		        HtmlSelect cles = form.getSelectByName("CORE_CODE");
-		        for (HtmlOption option : cles.getOptions()) {
-		        	cleList.add(option.asText());
+		        if(query.getCLE() != null) {
+		        	//CLE
+			        HtmlSelect cles = form.getSelectByName("CORE_CODE");
+			        cles.setTextContent(query.getCLE());
 		        }
 		        
 		        //Subject

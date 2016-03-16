@@ -44,7 +44,7 @@ public class Query {
 	}
 	
 	/**
-	 * Compares two strings
+	 * Compares two strings and checks for null
 	 * @param str0 first string
 	 * @param str1 second string
 	 * @return true if the two strings are the same false if they are not

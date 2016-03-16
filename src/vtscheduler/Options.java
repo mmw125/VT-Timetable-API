@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * @author Mark Wiggans
  */
 public class Options {
+	
 	private ArrayList<String> campuses = null, 
 			terms = null, 
 			cles = null, 
@@ -30,7 +31,7 @@ public class Options {
 	 * @param sectionType options for sectionTypes
 	 * @param display options for displays
 	 */
-	Options(ArrayList<String> campuses, ArrayList<String> terms, ArrayList<String> cles, ArrayList<String> subject, ArrayList<String> sectionType, ArrayList<String> display){
+	public Options(ArrayList<String> campuses, ArrayList<String> terms, ArrayList<String> cles, ArrayList<String> subject, ArrayList<String> sectionType, ArrayList<String> display){
 		this.campuses = campuses;
 		this.terms = terms;
 		this.cles = cles;
@@ -39,13 +40,17 @@ public class Options {
 		this.display = display;
 	}
 	
+	/**
+	 * Sets the campuses that are available
+	 * @param camp the campuses to choose from
+	 */
 	void setCampuses(ArrayList<String> camp){ this.campuses = camp;	}
 	
 	void setTerms(ArrayList<String> terms){ this.terms = terms; }
 	
 	void setCLEs(ArrayList<String> camp){ this.campuses = camp; }
 	
-	void setSubjects(ArrayList<String> subject){ this.subject = subject;	}
+	void setSubjects(ArrayList<String> subject){ this.subject = subject; }
 	
 	void setSectionTypes(ArrayList<String> sectionTypes){ this.sectionType = sectionTypes; }
 	
