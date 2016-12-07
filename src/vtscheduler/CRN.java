@@ -76,11 +76,11 @@ public class CRN {
     @Override
     public String toString(){
         StringBuilder b = new StringBuilder();
-        b.append(crn + " ");
-        b.append(instructor + " ");
-        b.append(location + " ");
+        b.append(crn + "|");
+        b.append(instructor + "|");
+        b.append(location + "|");
         for(MeetingTime time : meetingTimes){
-            b.append(time.toString() + " ");
+            b.append(time.toString() + "|");
         }
         return b.toString();
     }
