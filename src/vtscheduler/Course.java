@@ -45,9 +45,9 @@ public class Course {
 
     @Override
     public String toString(){
-        StringBuilder builder = new StringBuilder(department.getAbbreviation() + "|" + number + "|" + name + "|" + type + '\n');
+        StringBuilder builder = new StringBuilder(department.getAbbreviation() + "|" + number + "|" + name + "|" + type);
         for(CRN crn : crns){
-            builder.append("	"+crn.toString()+'\n');
+            builder.append("~"+crn.toString());
         }
         return builder.toString();
     }

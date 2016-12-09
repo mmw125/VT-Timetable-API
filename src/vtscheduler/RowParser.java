@@ -1,5 +1,7 @@
 package vtscheduler;
 
+import java.util.List;
+
 import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 
@@ -34,32 +36,33 @@ class RowParser {
                 }
             }
         }else{
-            for(int i = 0; i < row.getCells().size(); i++){
-                HtmlTableCell cell = row.getCells().get(i);
-                switch(i){
-                    case 0:
-                        try{
-                            crn = Integer.parseInt(cell.asText().trim());
-                        }catch(NumberFormatException e){
-                            System.err.println("NumberFormatException");
-                        }
-                    case 1:course = cell.asText(); break;
-                    case 2:title = cell.asText(); break;
-                    case 3:
-                        if(cell.asText().equals("ONLINE COURSE")){
-                            online = true;
-                        }
-                        type = cell.asText(); break;
-                    case 4:credits = cell.asText(); break;
-                    case 5:seats = cell.asText(); break;
-                    case 6:instructor = cell.asText(); break;
-                    case 7:days = cell.asText(); break;
-                    case 8:begin = cell.asText(); break;
-                    case 9:end = cell.asText(); break;
-                    case 10:location = cell.asText(); break;
-                    case 12:exam = cell.asText(); break;
-                }
-            }
+        	List<HtmlTableCell> cells = row.getCells();
+        	try{
+        		try{
+        			crn = Integer.parseInt(cells.get(0).asText().trim());
+        		}catch(NumberFormatException e){
+        			System.err.println("NumberFormatException");
+        		}
+        		course = cells.get(1).asText();
+        		title = cells.get(2).asText();
+        		if(cells.get(3).asText().equals("ONLINE COURSE")){
+        			online = true;
+        		}
+        		type = cells.get(3).asText();
+        		credits = cells.get(4).asText();
+        		seats = cells.get(5).asText();
+        		instructor = cells.get(6).asText();
+        		days = cells.get(7).asText();
+        		begin = cells.get(8).asText();
+        		if(begin.equals("----- (ARR) -----")) {
+        			location = cells.get(9).asText();
+        			exam = cells.get(10).asText();
+        		} else {
+        			end = cells.get(9).asText();
+        			location = cells.get(10).asText();
+        			exam = cells.get(11).asText();
+        		}
+        	} catch (IndexOutOfBoundsException e){ }
         }
     }
 
