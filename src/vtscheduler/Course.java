@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Mark Wiggans
  */
 public class Course {
-    private String name, course, number;
+    private String name, course, number, semester;
     private Department department;
     private ArrayList<CRN> crns;
     private ClassType type;
@@ -17,11 +17,14 @@ public class Course {
      * Creates a course with the given course and name
      * @param course the course's number
      * @param name the name of the course
+     * @param semester 
      */
-    public Course(String course, String name, ClassType type){
+    public Course(String course, String name, ClassType type, String semester){
     	this.type = type;
         this.name = name;
+        System.out.println(this.name);
         this.course = course;
+        this.semester = semester;
         String[] splitCourse = course.split("-");
         department = Department.getDepartment(splitCourse[0]);
         department.addCourse(this);
@@ -45,7 +48,7 @@ public class Course {
 
     @Override
     public String toString(){
-        StringBuilder builder = new StringBuilder(department.getAbbreviation() + "|" + number + "|" + name + "|" + type);
+        StringBuilder builder = new StringBuilder(semester + "|" + department.getAbbreviation() + "|" + number + "|" + name + "|" + type);
         for(CRN crn : crns){
             builder.append("~"+crn.toString());
         }

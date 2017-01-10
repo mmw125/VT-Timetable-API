@@ -206,8 +206,10 @@ public class Timetable extends InformationSender {
 	 * 
 	 * @param page
 	 *            the page to parse
+	 * @param semester 
+	 * 			  semester name
 	 */
-	public ArrayList<Course> parsePage(HtmlPage page) {
+	public ArrayList<Course> parsePage(HtmlPage page, String semester) {
 		ArrayList<Course> courses = new ArrayList<Course>();
 		if (page.getByXPath("//table[@class='dataentrytable']").isEmpty()) {
 			return courses;
@@ -231,7 +233,7 @@ public class Timetable extends InformationSender {
 					// the last course
 					// If it is not, create a new course
 					if (lastCourse == null || !lastCourse.getCourseString().equals(p.course())) {
-						Course c = new Course(p.course(), p.title(), p.type());
+						Course c = new Course(p.course(), p.title(), p.type(), semester);
 						courses.add(c);
 						lastCourse = c;
 					}
@@ -277,15 +279,21 @@ public class Timetable extends InformationSender {
 				System.out.println(select.asText());
 				try {
 					PrintWriter writer = new PrintWriter("database");
-					for (HtmlOption option : select.getOptions()) {
-						if (!option.asText().contains("All Subjects")) {
-							writer.print(option.asText() + '|');
-							System.out.println(option.asText());
-							select.setSelectedAttribute(option, true);
-							try {
-								parsePage((HtmlPage) button.click());
-							} catch (IOException e) {
-								e.printStackTrace();
+					for (HtmlOption termOption : term.getOptions()) {
+						if(termOption.equals(term.getOption(0))) {
+							continue;
+						}
+						term.setSelectedAttribute(termOption, true);
+						for (HtmlOption option : select.getOptions()) {
+							if (!option.asText().contains("All Subjects")) {
+								writer.print(option.asText() + '|');
+								System.out.println(option.asText());
+								select.setSelectedAttribute(option, true);
+								try {
+									parsePage((HtmlPage) button.click(), termOption.asText());
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -293,7 +301,7 @@ public class Timetable extends InformationSender {
 					writer.println();
 					for (Department d : Department.getDepartments()) {
 						for (Course c : d.getCourses()){
-							writer.println(c.toString());
+							writer.println(c.toString().replaceAll("\n", "\t"));
 						}
 					}
 					writer.close();
