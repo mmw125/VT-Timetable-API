@@ -275,20 +275,22 @@ public class Timetable extends InformationSender {
 				term.setSelectedAttribute(term.getOptions().get(1), true);
 				HtmlSelect select = form.getSelectByName("subj_code");
 				System.out.println(select.asText());
-				for (HtmlOption option : select.getOptions()) {
-					if (!option.asText().contains("All Subjects")) {
-						System.out.println(option.asText());
-						select.setSelectedAttribute(option, true);
-						try {
-							parsePage((HtmlPage) button.click());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-				webClient.closeAllWindows();
 				try {
 					PrintWriter writer = new PrintWriter("database");
+					for (HtmlOption option : select.getOptions()) {
+						if (!option.asText().contains("All Subjects")) {
+							writer.print(option.asText() + '|');
+							System.out.println(option.asText());
+							select.setSelectedAttribute(option, true);
+							try {
+								parsePage((HtmlPage) button.click());
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					webClient.closeAllWindows();
+					writer.println();
 					for (Department d : Department.getDepartments()) {
 						for (Course c : d.getCourses()){
 							writer.println(c.toString());
