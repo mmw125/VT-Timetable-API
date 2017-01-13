@@ -62,5 +62,9 @@ public class Course {
     public String getCourseString() {
         return course;
     }
+    
+    public ClassType getType() {
+    	return type;
+    }
 }
 

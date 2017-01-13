@@ -232,7 +232,7 @@ public class Timetable extends InformationSender {
 					// If row is a course, check if the course is the same as
 					// the last course
 					// If it is not, create a new course
-					if (lastCourse == null || !lastCourse.getCourseString().equals(p.course())) {
+					if (lastCourse == null || !lastCourse.getCourseString().equals(p.course()) || !lastCourse.getType().equals(p.type())) {
 						Course c = new Course(p.course(), p.title(), p.type(), semester);
 						courses.add(c);
 						lastCourse = c;
