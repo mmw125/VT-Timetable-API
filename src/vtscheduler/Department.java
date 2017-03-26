@@ -2,12 +2,14 @@ package vtscheduler;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  * This represents a department at the university
  * @author Mark Wiggans
  */
-public class Department {
+public class Department implements JSONAble {
     private static ArrayList<Department> departments = new ArrayList<Department>();
     private String abbrev, name = "";
     private ArrayList<Course> courses;
@@ -89,5 +91,18 @@ public class Department {
      */
     public String getAbbreviation(){
         return abbrev;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public JSONObject toObject() {
+    	JSONObject obj = new JSONObject();
+    	obj.put("name", this.getName());
+    	obj.put("abbreviation", abbrev);
+    	JSONArray courses = new JSONArray();
+    	for (Course c : this.getCourses()){
+    		courses.add(c.toObject());
+		}
+    	obj.put("courses", courses);
+    	return obj;
     }
 }

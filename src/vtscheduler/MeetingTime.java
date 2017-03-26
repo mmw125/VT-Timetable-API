@@ -2,10 +2,12 @@ package vtscheduler;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONObject;
+
 /**
  * This has a day and a start and end time.
  */
-public class MeetingTime {
+public class MeetingTime implements JSONAble {
     private Time start, end;
     private Day day;
     private String location;
@@ -96,5 +98,17 @@ public class MeetingTime {
         }
 
         return output;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public JSONObject toObject(){
+    	JSONObject obj = new JSONObject();
+    	obj.put("isOnline", day == Day.ONLINE);
+    	if(day != Day.ONLINE) {
+    		obj.put("day", day.toString());
+    		obj.put("startTime", this.start.toString());
+    		obj.put("endTime", this.end.toString());
+    	}
+    	return obj;
     }
 }

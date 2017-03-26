@@ -2,11 +2,14 @@ package vtscheduler;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 /**
  * Represents an individual CRN
  * @author Mark Wiggans
  */
-public class CRN {
+public class CRN implements JSONAble {
     private int crn;
     private String instructor, location;
     private ArrayList<MeetingTime> meetingTimes;
@@ -92,6 +95,20 @@ public class CRN {
             return crn == ((CRN)other).crn;
         }
         return false;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public JSONObject toObject() {
+    	JSONObject obj = new JSONObject();
+    	obj.put("crn", this.crn);
+    	obj.put("instructor", this.instructor);
+    	obj.put("location", this.location);
+    	JSONArray meetingTimeList = new JSONArray();
+    	for(MeetingTime mt : this.getMeetingTimes()) {
+    		meetingTimeList.add(mt.toObject());
+    	}
+    	obj.put("meetingTimes", meetingTimeList);
+    	return obj;
     }
 }
 

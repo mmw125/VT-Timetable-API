@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.simple.JSONObject;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -261,6 +262,7 @@ public class Timetable extends InformationSender {
 	 */
 	public void cacheTimeTable() {
 		Thread thread = new Thread(new Runnable() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				System.out.println("Started parsing");
@@ -276,7 +278,6 @@ public class Timetable extends InformationSender {
 				HtmlSelect term = form.getSelectByName("TERMYEAR");
 				term.setSelectedAttribute(term.getOptions().get(1), true);
 				HtmlSelect select = form.getSelectByName("subj_code");
-				System.out.println(select.asText());
 				try {
 					PrintWriter writer = new PrintWriter("database");
 					for (HtmlOption termOption : term.getOptions()) {
@@ -286,7 +287,6 @@ public class Timetable extends InformationSender {
 						term.setSelectedAttribute(termOption, true);
 						for (HtmlOption option : select.getOptions()) {
 							if (!option.asText().contains("All Subjects")) {
-								writer.print(option.asText() + '|');
 								System.out.println(option.asText());
 								select.setSelectedAttribute(option, true);
 								try {
@@ -298,12 +298,11 @@ public class Timetable extends InformationSender {
 						}
 					}
 					webClient.closeAllWindows();
-					writer.println();
+					JSONObject obj = new JSONObject();
 					for (Department d : Department.getDepartments()) {
-						for (Course c : d.getCourses()){
-							writer.println(c.toString().replaceAll("\n", "\t"));
-						}
+						obj.put(d.getAbbreviation(), d.toObject());
 					}
+					writer.write(obj.toJSONString());
 					writer.close();
 				} catch (IOException e) {
 					System.err.println("Could not open database file");

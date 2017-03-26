@@ -2,6 +2,9 @@ package vtscheduler;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 /**
  * Represents a course offered at tech
  * 
@@ -22,7 +25,6 @@ public class Course {
     public Course(String course, String name, ClassType type, String semester){
     	this.type = type;
         this.name = name;
-        System.out.println(this.name);
         this.course = course;
         this.semester = semester;
         String[] splitCourse = course.split("-");
@@ -65,6 +67,22 @@ public class Course {
     
     public ClassType getType() {
     	return type;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public JSONObject toObject() {
+    	JSONObject obj = new JSONObject();
+    	obj.put("type", this.type);
+    	obj.put("name", this.name);
+    	obj.put("course", this.course);
+    	obj.put("semester", this.semester);
+    	obj.put("number", this.number);
+    	JSONArray crnList = new JSONArray();
+    	for(CRN crn : crns) {
+    		crnList.add(crn.toObject());
+    	}
+    	obj.put("crns", crnList);
+    	return obj;
     }
 }
 
