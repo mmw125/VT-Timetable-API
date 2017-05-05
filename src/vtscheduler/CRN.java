@@ -27,6 +27,10 @@ public class CRN implements JSONAble {
         this.instructor = instructor;
         meetingTimes = new ArrayList<MeetingTime>();
     }
+    
+    public String getLocation() {
+    	return location;
+    }
 
     /**
      * Gets the number

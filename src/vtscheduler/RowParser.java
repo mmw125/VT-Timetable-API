@@ -55,6 +55,7 @@ class RowParser {
         		days = cells.get(7).asText();
         		begin = cells.get(8).asText();
         		if(begin.equals("----- (ARR) -----")) {
+        			end = null;
         			location = cells.get(9).asText();
         			exam = cells.get(10).asText();
         		} else {
@@ -62,6 +63,7 @@ class RowParser {
         			location = cells.get(10).asText();
         			exam = cells.get(11).asText();
         		}
+        		online = end == null || type.equals("ONLINE COURSE");
         	} catch (IndexOutOfBoundsException e){ }
         }
     }

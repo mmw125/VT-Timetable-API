@@ -20,13 +20,22 @@ public class Department implements JSONAble {
      * @return the Department with the given abbrev
      */
     public static Department getDepartment(String abbrev){
+        return getDepartment(abbrev, null);
+    }
+    
+    /**
+     * This will either get the department or create a new department with the given abbreviation
+     * @param abbrev the abbrev of the department you are trying to get
+     * @return the Department with the given abbrev
+     */
+    public static Department getDepartment(String abbrev, String name){
         for(Department department : departments){
             if(department.abbrev.equals(abbrev)){
                 return department;
             }
         }
 
-        Department d = new Department(abbrev);
+        Department d = new Department(abbrev, name);
         departments.add(d);
         return d;
     }
@@ -43,8 +52,9 @@ public class Department implements JSONAble {
      * Creates a department with the given abbreviation
      * @param abbreviation the abbreviation to give it
      */
-    private Department(String abbreviation){
+    private Department(String abbreviation, String name){
         this.abbrev = abbreviation;
+        this.name = name;
         courses = new ArrayList<Course>();
     }
 
@@ -104,5 +114,10 @@ public class Department implements JSONAble {
 		}
     	obj.put("courses", courses);
     	return obj;
+    }
+    
+    @Override
+    public String toString() {
+    	return getName() + " - " + getAbbreviation();
     }
 }

@@ -19,13 +19,11 @@ public enum ClassType {
             return ONLINE;
         }
         switch(s.charAt(0)){
-            case 'L': return LECTURE;
             case 'B': return LAB;
             case 'I': return INDEPENDENT_STUDY;
             case 'C': return RECITATION;
             case 'R': return RESEARCH;
-            default: assert false;
-                return null;
+            default: return LECTURE;
         }
     }
 

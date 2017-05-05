@@ -1,5 +1,7 @@
 package vtscheduler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlTable;
 import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 
-public class Timetable extends InformationSender {
+public class Timetable {
 	private static Timetable instance;
 	private static final String URL = "https://banweb.banner.vt.edu/ssb/prod/HZSKVTSC.P_ProcRequest";
 
@@ -33,7 +35,6 @@ public class Timetable extends InformationSender {
 		return instance;
 	}
 
-	private ArrayList<InformationEvent> cachedEvents;
 	private Options options;
 
 	/**
@@ -41,7 +42,6 @@ public class Timetable extends InformationSender {
 	 */
 	private Timetable() {
 		options = null;
-		cachedEvents = new ArrayList<InformationEvent>();
 	}
 
 	/**
@@ -119,87 +119,9 @@ public class Timetable extends InformationSender {
 					webClient.closeAllWindows();
 					options = new Options(campusesList, termList, cleList, subjectList, sectTypeList, displayList);
 				}
-
-				notifyListeners(options);
 			}
 		});
 		thread.run();
-	}
-
-	void runQuery(Query query, boolean forceUpdate) {
-		Thread thread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				if (!forceUpdate) {
-					for (InformationEvent event : cachedEvents) {
-						if (event.getQuery().equals(query)) {
-							notifyListeners(event);
-							return;
-						}
-					}
-				}
-
-				WebClient webClient = new WebClient();
-				HtmlPage page = null;
-				try {
-					page = webClient.getPage(URL);
-				} catch (FailingHttpStatusCodeException | IOException e1) {
-					e1.printStackTrace();
-				}
-				HtmlForm form = page.getFormByName("ttform");
-
-				// Campus
-				if (query.getCampus() != null) {
-					HtmlSelect campuses = form.getSelectByName("CAMPUS");
-					for (HtmlOption option : campuses.getOptions()) {
-						if (option.asText().equals(query.getCampus())) {
-							option.setSelected(true);
-						}
-					}
-				}
-
-				if (query.getTerm() != null) {
-					// Term
-					HtmlSelect term = form.getSelectByName("TERMYEAR");
-					for (HtmlOption option : term.getOptions()) {
-						if (option.asText().equals(query.getTerm())) {
-							option.setSelected(true);
-						}
-					}
-				}
-
-				if (query.getCLE() != null) {
-					// CLE
-					HtmlSelect cles = form.getSelectByName("CORE_CODE");
-					cles.setTextContent(query.getCLE());
-				}
-
-				// Subject
-				ArrayList<String> subjectList = new ArrayList<String>();
-				HtmlSelect subjects = form.getSelectByName("subj_code");
-				for (HtmlOption option : subjects.getOptions()) {
-					subjectList.add(option.asText());
-				}
-
-				// Section Type
-				ArrayList<String> sectTypeList = new ArrayList<String>();
-				HtmlSelect sectType = form.getSelectByName("SCHDTYPE");
-				for (HtmlOption option : sectType.getOptions()) {
-					sectTypeList.add(option.asText());
-				}
-
-				// Display
-				ArrayList<String> displayList = new ArrayList<String>();
-				HtmlSelect display = form.getSelectByName("open_only");
-				for (HtmlOption option : display.getOptions()) {
-					displayList.add(option.asText());
-				}
-
-				webClient.closeAllWindows();
-			}
-		});
-		thread.start();
 	}
 
 	/**
@@ -207,8 +129,8 @@ public class Timetable extends InformationSender {
 	 * 
 	 * @param page
 	 *            the page to parse
-	 * @param semester 
-	 * 			  semester name
+	 * @param semester
+	 *            semester name
 	 */
 	public ArrayList<Course> parsePage(HtmlPage page, String semester) {
 		ArrayList<Course> courses = new ArrayList<Course>();
@@ -230,15 +152,15 @@ public class Timetable extends InformationSender {
 						lastCRN.addAdditionalTimes(m);
 					}
 				} else {
-					// If row is a course, check if the course is the same as
-					// the last course
+					// If row is a course, check if the course is the same as the last course
 					// If it is not, create a new course
-					if (lastCourse == null || !lastCourse.getCourseString().equals(p.course()) || !lastCourse.getType().equals(p.type())) {
+					if (lastCourse == null || !lastCourse.getCourseString().equals(p.course())
+							|| !lastCourse.getType().equals(p.type())) {
 						Course c = new Course(p.course(), p.title(), p.type(), semester);
 						courses.add(c);
 						lastCourse = c;
 					}
-					// Create a new course and add it to the
+					// Create a new crn and add it to the course
 					CRN crn = new CRN(p.crn(), p.instructor(), p.location());
 					if (!p.online()) {
 						for (MeetingTime m : MeetingTime.parseStrings(p.days(), p.begin(), p.end(), p.location())) {
@@ -252,63 +174,92 @@ public class Timetable extends InformationSender {
 		}
 		return courses;
 	}
-	
-	public static void main(String[] args){
+
+	/**
+	 * Scrapes the timetable of classes and puts the data into a database at database.db
+	 * @param args unused
+	 */
+	public static void main(String[] args) {
 		Timetable.getInstance().cacheTimeTable();
+		File f = new File("database.db");
+		f.delete();
+		CreateDatabase db = CreateDatabase.createNewDatabase("database.db");
+		db.createTables();
+		for (Department d : Department.getDepartments()) {
+			db.insert(d);
+		}
 	}
 
 	/**
 	 * Caches the entire time table to make queries faster
 	 */
 	public void cacheTimeTable() {
+		System.out.println("Started parsing");
+		WebClient webClient = new WebClient();
+		HtmlPage page = null;
+		try {
+			page = webClient.getPage(URL);
+		} catch (FailingHttpStatusCodeException | IOException e1) {
+			e1.printStackTrace();
+		}
+		HtmlForm form = page.getFormByName("ttform");
+		HtmlSubmitInput button = form.getInputByName("BTN_PRESSED");
+		HtmlSelect term = form.getSelectByName("TERMYEAR");
+		term.setSelectedAttribute(term.getOptions().get(1), true);
+		HtmlSelect select = form.getSelectByName("subj_code");
+		for (HtmlOption termOption : term.getOptions()) {
+			if (termOption.equals(term.getOption(0))) {
+				continue;
+			}
+			term.setSelectedAttribute(termOption, true);
+			for (HtmlOption option : select.getOptions()) {
+				if (!option.asText().contains("All Subjects")) {
+					String[] split = option.asText().split(" - ");
+					Department.getDepartment(split[0], split[1]);
+					System.out.println(option.asText());
+					select.setSelectedAttribute(option, true);
+					try {
+						parsePage((HtmlPage) button.click(), termOption.asText());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		webClient.closeAllWindows();
+	}
+
+	/**
+	 * Starts a new caching thread
+	 */
+	public void startCachingThread() {
 		Thread thread = new Thread(new Runnable() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
-				System.out.println("Started parsing");
-				WebClient webClient = new WebClient();
-				HtmlPage page = null;
-				try {
-					page = webClient.getPage(URL);
-				} catch (FailingHttpStatusCodeException | IOException e1) {
-					e1.printStackTrace();
-				}
-				HtmlForm form = page.getFormByName("ttform");
-				HtmlSubmitInput button = form.getInputByName("BTN_PRESSED");
-				HtmlSelect term = form.getSelectByName("TERMYEAR");
-				term.setSelectedAttribute(term.getOptions().get(1), true);
-				HtmlSelect select = form.getSelectByName("subj_code");
-				try {
-					PrintWriter writer = new PrintWriter("database");
-					for (HtmlOption termOption : term.getOptions()) {
-						if(termOption.equals(term.getOption(0))) {
-							continue;
-						}
-						term.setSelectedAttribute(termOption, true);
-						for (HtmlOption option : select.getOptions()) {
-							if (!option.asText().contains("All Subjects")) {
-								System.out.println(option.asText());
-								select.setSelectedAttribute(option, true);
-								try {
-									parsePage((HtmlPage) button.click(), termOption.asText());
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-					webClient.closeAllWindows();
-					JSONObject obj = new JSONObject();
-					for (Department d : Department.getDepartments()) {
-						obj.put(d.getAbbreviation(), d.toObject());
-					}
-					writer.write(obj.toJSONString());
-					writer.close();
-				} catch (IOException e) {
-					System.err.println("Could not open database file");
-				}
+				cacheTimeTable();
 			}
 		});
 		thread.start();
+	}
+
+	/**
+	 * Writes the database to a JSON file
+	 * @param path location for the JSON file
+	 */
+	@SuppressWarnings("unchecked")
+	public void writeToJSON(String path) {
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		JSONObject obj = new JSONObject();
+		for (Department d : Department.getDepartments()) {
+			obj.put(d.getAbbreviation(), d.toObject());
+		}
+		writer.write(obj.toJSONString());
+		writer.close();
 	}
 }

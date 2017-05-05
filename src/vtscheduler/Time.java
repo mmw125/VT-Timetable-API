@@ -1,11 +1,18 @@
 package vtscheduler;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * This represents a time
  * It takes in 12 hour AM-PM and converts it to military time to make it easier to compute
  */
 class Time {
-    private int hours = 0, minutes = 0;
+	public static final SimpleDateFormat SHORT_HOUR_TIME = new SimpleDateFormat("hh:mma");
+    private Integer hours, minutes;
     private String startString;
 
     /**
@@ -13,18 +20,27 @@ class Time {
      * @param time
      */
     public Time(String time){
-        if(time == null){
-            time = "00:00AM";
-        }
         startString = time;
-        int colonPos = time.indexOf(':');
-        if(colonPos != -1){
-            hours = Integer.parseInt(time.substring(0, colonPos)) + 12;
-            minutes = Integer.parseInt(time.substring(colonPos+1, colonPos+3));
-            if(time.endsWith("PM")){
-                hours = hours + 12;
-            }
-        }
+        Integer[] times = timeToInt(startString);
+        hours = times[0];
+        minutes = times[1];
+    }
+    
+    /**
+     * Converts a time to a Integer array
+     * @param time string time in format 12:00AM
+     * @return array for number in [hours, minutes] in 24-hour format
+     */
+    public static Integer[] timeToInt(String time) {
+    	if(time != null) {
+    		try{
+                Date d = SHORT_HOUR_TIME.parse(time);
+                Calendar calendar = GregorianCalendar.getInstance();
+                calendar.setTime(d);
+                return new Integer[]{calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)};
+            } catch (ParseException e) { }
+    	}
+        return new Integer[]{null, null};
     }
 
     @Override
@@ -33,10 +49,10 @@ class Time {
     }
 
     /**
-     * Gets the num of hours in the 24 hour format
-     * @return hours in 24 hour formay
+     * Gets the number of hours in the 24 hour format
+     * @return hours in 24 hour format
      */
-    public int getHours(){
+    public Integer getHours(){
         return hours;
     }
 
@@ -44,7 +60,7 @@ class Time {
      * Gets the number of minutes in the time
      * @return the minutes
      */
-    public int getMinutes(){
+    public Integer getMinutes(){
         return minutes;
     }
     
@@ -56,5 +72,16 @@ class Time {
     		return other.minutes == minutes && other.hours == hours;
     	}
     	return false;
+    }
+    
+    /**
+     * Gets the integer representation of the time
+     * @return hours * 60 + minutes or null
+     */
+    public Integer toInt() {
+    	if(this.getHours() == null || this.getMinutes() == null) {
+    		return null;
+    	}
+    	return (this.getHours() * 60) + this.getMinutes();
     }
 }

@@ -6,7 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- * Represents a course offered at tech
+ * Represents a course offered at Virginia Tech
  * 
  * @author Mark Wiggans
  */
@@ -48,15 +48,6 @@ public class Course {
         crn.setCourse(this);
     }
 
-    @Override
-    public String toString(){
-        StringBuilder builder = new StringBuilder(semester + "|" + department.getAbbreviation() + "|" + number + "|" + name + "|" + type);
-        for(CRN crn : crns){
-            builder.append("~"+crn.toString());
-        }
-        return builder.toString();
-    }
-
     /**
      * Gets the course string
      * @return the course string
@@ -67,6 +58,26 @@ public class Course {
     
     public ClassType getType() {
     	return type;
+    }
+    
+    public String getName() {
+    	return this.name;
+    }
+    
+    public String getNumber() {
+    	return number;
+    }
+    
+    public Department getDepartment() {
+    	return this.department;
+    }
+    
+    public String getSemester() {
+    	return this.semester;
+    }
+    
+    public ArrayList<CRN> getCRNs() {
+    	return this.crns;
     }
     
     @SuppressWarnings("unchecked")
@@ -83,6 +94,15 @@ public class Course {
     	}
     	obj.put("crns", crnList);
     	return obj;
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder(semester + "|" + department.getAbbreviation() + "|" + number + "|" + name + "|" + type);
+        for(CRN crn : crns){
+            builder.append("~"+crn.toString());
+        }
+        return builder.toString();
     }
 }
 
